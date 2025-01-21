@@ -11,8 +11,8 @@
       <div class="h-full  w-[120vh] flex justify-around items-center text-white font-bold text-2xl  ">
         <router-link to="/" class="mr-12">HOME</router-link>
         <router-link to="/products" class="mr-12 hover:text-teal-400" >PRODUCTS</router-link>
-        <div class="mr-12 hover:text-teal-400">ABOUT</div>
-        <div class="hover:text-teal-400">LOGIN</div>
+        <router-link to="/about" class="mr-12 hover:text-teal-400">ABOUT</router-link>
+        <router-link to="/login" class="hover:text-teal-400">LOGIN</router-link>
 
       </div>
 
