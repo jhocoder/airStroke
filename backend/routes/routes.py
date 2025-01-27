@@ -21,7 +21,6 @@ def setup_routes(app):
         
     
     @app.route("/products/<int:product_id>")
-    
     def productsId(product_id):
         productdb = shoesFront.getShoesProduct(product_id)
         return jsonify(productdb)
@@ -31,7 +30,25 @@ def setup_routes(app):
         productsOrder = shoesFront.getAsc()
         return jsonify(productsOrder)
     
-    @app.route("/products/filterDesc")
+    @app.route("/products/filterDesc", methods=['GET'])
     def orderDesc():
-        productsOrder = shoesFront.getDesc()
-        return jsonify(productsOrder)
+        page_num = request.args.get("page", default=1, type=int)
+    
+    # Asumiendo que `shoesFront.getDesc(page_num)` devuelve un diccionario con "products" y "totalPages"
+        productsOrder = shoesFront.getDesc(page_num)
+    
+    # Imprimir para depuración
+        print("Total de páginas:", productsOrder["totalPages"])  
+        print("Productos:", productsOrder["products"])  
+    
+    # Devolver la respuesta correctamente estructurada
+        return jsonify({
+        "products": productsOrder["products"],
+        "totalPages": productsOrder["totalPages"]
+    })
+
+    
+    @app.route("/registerSend", methods = ['POST'])
+    def registerUser():
+        
+        return jsonify("User Register")

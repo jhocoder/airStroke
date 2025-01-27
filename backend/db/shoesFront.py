@@ -45,10 +45,23 @@ def getAsc():
     conn.close()
     return results
 
-def getDesc():
+def getDesc(page_num):
     conn, mycursor = get_connection()
-    mycursor.execute("SELECT * FROM zapati ORDER BY price desc")
+    
+    mycursor.execute("SELECT COUNT(*) as TotalDesc FROM zapati")
+    count = mycursor.fetchone()[0]
+    per_page = 6
+    offset = ( page_num - 1) * per_page
+    querySql = "SELECT * from zapati ORDER BY price desc LIMIT {} OFFSET {}".format(per_page, offset)
+    mycursor.execute(querySql)
     results = mycursor.fetchall()
     conn.close()
-    return results
+    total_pages = (count + per_page - 1) // per_page
+    
+    return {"products": results, "totalPages": total_pages}
+
+def addUser():
+    conn, mycursor = get_connection()
+    
+    mycursor.execute("INSERT INTO zapati(email, nombre, apellido, password)")
 
