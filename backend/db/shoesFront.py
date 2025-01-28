@@ -38,12 +38,19 @@ def getShoesProduct(num):
     return product
 
 
-def getAsc():
+def getAsc(page_num):
     conn, mycursor = get_connection()
-    mycursor.execute("SELECT * FROM zapati ORDER BY price asc")
+    mycursor.execute("SELECT COUNT(*) as TotalAsc FROM zapati")
+    count = mycursor.fetchone()[0]
+    per_page = 6
+    offset = ( page_num - 1) * per_page
+    querySql = "SELECT * from zapati ORDER BY price asc LIMIT {} OFFSET {}".format(per_page, offset)
+    mycursor.execute(querySql)
     results = mycursor.fetchall()
     conn.close()
-    return results
+    total_pages = (count + per_page - 1) // per_page
+    return {"products": results, "totalPages": total_pages}
+
 
 def getDesc(page_num):
     conn, mycursor = get_connection()
@@ -60,8 +67,20 @@ def getDesc(page_num):
     
     return {"products": results, "totalPages": total_pages}
 
-def addUser():
+def addUser(nombre, apellido, email, password):
     conn, mycursor = get_connection()
-    
-    mycursor.execute("INSERT INTO zapati(email, nombre, apellido, password)")
+    try:
+        mycursor.execute(
+            "INSERT INTO users (nombre, apellido, email, password) VALUES (?, ?, ?, ?)",
+            (nombre, apellido, email, password),
+        )
+        conn.commit()
+        return True
+    except Exception as e:
+        print(f"Error al registrar usuario: {e}")
+        return False
+    finally:
+        conn.close()
 
+
+    
